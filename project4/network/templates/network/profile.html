@@ -1,0 +1,37 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="profile-area">
+        <div id="profile-username">{{ user.username }}</div>
+        <div id="profile-follows">
+        <div id="profile-followers">Followers: {{ followers.count }}</div>
+        <div id="profile-following">Following: {{ following.count }}</div>
+        </div>
+        {% if current_user != user %}
+        <div id="profile-buttons">
+            {% if is_follow == False %}
+            <a class="follow-button" id="follow-button" href="{% url 'follow' user.id %}">Follow</a>
+            {% elif is_follow == True %}
+            <a class="follow-button" id="unfollow-button" href="{% url 'unfollow' user.id %}">Unfollow</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    {% for post in posts %}
+    <div class="post-area" id="{{ post.id }}">
+        <div class="post-user"><a class='post-user-href' href="{% url 'user_profile' post.create_by_user.id %}">{{ post.create_by_user.username }}</a></div>
+        {% if current_user == post.create_by_user %}
+        <div class="post-edit">Edit</div>
+        {% endif %}
+        <div class="post-text">{{ post.text }}</div>
+        <div class="post-likes"><img class="like-img" src="/static/network/like2.png">{{ post.number_of_likes }}</div>
+        <div class="post-time">{{ post.timestamp }}</div>
+
+    </div>
+    {% endfor %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/twiter.js' %}"></script>
+{% endblock %}
